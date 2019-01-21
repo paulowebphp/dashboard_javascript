@@ -24,13 +24,18 @@ class UserController
 
             let values = this.getValues();
 
-            this.getPhoto( (content) => 
+            this.getPhoto().then( ( content ) =>
             {
 
                 values.photo = content;
 
                 this.addLine(values);
 
+            }, ( e ) =>
+            {
+
+                console.log(e);
+                
             });//end getPhoto
 
         });//end getElementById
@@ -40,37 +45,48 @@ class UserController
 
 
 
-    getPhoto( callback )
+    getPhoto()
     {
 
-        let fileReader = new FileReader();
-
-        /** Transformando o Objeto this.formEl.elements em
-         * Array. O perador Spread poupa ter que indicar cada 
-         * um dos indices de um array.
-         */
-        let elements = [...this.formEl.elements].filter( item =>
+        return new Promise( ( resolve, reject ) =>
         {
 
-            if( item.name === 'photo' )
+            let fileReader = new FileReader();
+
+            /** Transformando o Objeto this.formEl.elements em
+             * Array. O perador Spread poupa ter que indicar cada 
+             * um dos indices de um array.
+             */
+            let elements = [...this.formEl.elements].filter( item =>
             {
+    
+                if( item.name === 'photo' )
+                {
+    
+                    return item;
+    
+                }//end if
+                
+            });//end filter
+    
+            let file = elements[0].files[0];
+    
+            fileReader.onload = () =>
+            {
+    
+                resolve(fileReader.result);
+    
+            }//end onload
 
-                return item;
+            fileReader.onerror = () =>
+            {
+                reject(e);
 
-            }//end if
-            
-        });//end filter
+            }//end onerror
+    
+            fileReader.readAsDataURL(file);
 
-        let file = elements[0].files[0];
-
-        fileReader.onload = () =>
-        {
-
-            callback(fileReader.result);
-
-        }//end onload
-
-        fileReader.readAsDataURL(file);
+        });//end Promise
 
     }//END getPhoto
 
