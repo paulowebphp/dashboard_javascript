@@ -8,8 +8,23 @@ class UserController
         this.tableEl = document.getElementById(tableId);
 
         this.onSubmit();
+        this.onEdit();
 
     }//END constructor
+
+
+
+
+    onEdit()
+    {
+
+        document.querySelector("#box-user-update .btn-cancel").addEventListener("click", e =>
+        {
+            this.showPanelCreate();
+
+        });//end querySelector
+
+    }//END onEditCancel
 
 
 
@@ -192,11 +207,20 @@ class UserController
             <td>${(dataUser.admin) ? 'Sim' : 'Não'} </td>
             <td>${Utils.dateFormat(dataUser.register)}</td>
             <td>
-                <button type="button" class="btn btn-primary btn-xs btn-flat">Editar</button>
+                <button type="button" class="btn btn-primary btn-edit btn-xs btn-flat">Editar</button>
                 <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
             </td>
     
-    `;//end innerHTML
+        `;//end innerHTML
+
+        tr.querySelector(".btn-edit").addEventListener("click", e =>
+        {
+
+            console.log(JSON.parse(tr.dataset.user));
+
+            this.showPanelUpdate();
+
+        });//end querySelector
         
         this.tableEl.appendChild(tr);
 
@@ -204,6 +228,29 @@ class UserController
 
     }//END addLine
 
+
+
+
+    showPanelCreate()
+    {
+        document.querySelector("#box-user-create").style.display = "block";
+
+        document.querySelector("#box-user-update").style.display = "none";
+
+    }//END showPanelCreate
+
+
+
+
+
+    showPanelUpdate()
+    {
+
+        document.querySelector("#box-user-create").style.display = "none";
+
+        document.querySelector("#box-user-update").style.display = "block";
+
+    }//END showPanelUpdate
 
 
 
@@ -215,22 +262,23 @@ class UserController
         let numberAdmin = 0;
 
         [...this.tableEl.children].forEach( tr =>
-            {
+        {
 
-                numberUsers++;
+            numberUsers++;
 
-                let user = JSON.parse(tr.dataset.user);
+            let user = JSON.parse(tr.dataset.user);
 
-                if( user._admin ) numberAdmin++;
+            if( user._admin ) numberAdmin++;
 
-            });//end forEach
+        });//end forEach
+           
+        document.querySelector("#number-users").innerHTML = numberUsers;
 
-            console.log(numberUsers, numberAdmin);
-            
-            document.querySelector("#number-users").innerHTML = numberUsers;
-            document.querySelector("#number-users-admin").innerHTML = numberAdmin;
+        document.querySelector("#number-users-admin").innerHTML = numberAdmin;
 
     }//END updateCount
+
+
 
 
 
