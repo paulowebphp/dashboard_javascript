@@ -83,9 +83,18 @@ class UserController
                 reject(e);
 
             }//end onerror
-    
-            fileReader.readAsDataURL(file);
 
+            if( file )
+            {
+                fileReader.readAsDataURL(file);
+
+            }//end if
+            else
+            {
+                resolve('dist/img/boxed-bg.jpg');
+                
+            }//end else
+    
         });//end Promise
 
     }//END getPhoto
