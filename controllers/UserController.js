@@ -17,7 +17,7 @@ class UserController
     onSubmit()
     {
         
-        this.tableEl.addEventListener("submit", event =>
+        this.formEl.addEventListener("submit", event =>
         {
 
             event.preventDefault();
@@ -35,7 +35,11 @@ class UserController
     {
         let user = {};
 
-        this.formEl.elements.forEach( function(field, index)
+        /** Transformando o Objeto this.formEl. elements em
+         * array. O perador Spread poupa ter que indicar cada 
+         * um dos indices de um array.
+         */
+        [...this.formEl.elements].forEach( function(field, index)
         {
             if( field.name == "gender" )
             {
