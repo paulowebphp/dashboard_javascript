@@ -115,12 +115,27 @@ class UserController
     {
         let user = {};
 
+        let isValid = true;
+
         /** Transformando o Objeto this.formEl.elements em
          * Array. O perador Spread poupa ter que indicar cada 
          * um dos indices de um array.
          */
         [...this.formEl.elements].forEach( function(field, index)
         {
+
+            if(
+                [ 'name','email','password' ].indexOf(field.name) > -1
+                &&
+                !field.value
+            )
+            {
+                field.parentElement.classList.add('has-error');
+
+                isValid = false;
+
+            }//end if
+
             if( field.name == "gender" )
             {
                 if( field.checked )
@@ -141,6 +156,11 @@ class UserController
             }//end else
     
         });//end forEach
+
+        if( !isValid )
+        {
+            return false;
+        }//end if
     
         return new User(
             user.name,
