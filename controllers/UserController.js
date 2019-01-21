@@ -22,7 +22,16 @@ class UserController
 
             event.preventDefault();
 
-            this.addLine(this.getValues())
+            let values = this.getValues();
+
+            this.getPhoto( (content) => 
+            {
+
+                values.photo = content;
+
+                this.addLine(values);
+
+            });//end getPhoto
 
         });//end getElementById
 
@@ -31,12 +40,48 @@ class UserController
 
 
 
+    getPhoto( callback )
+    {
+
+        let fileReader = new FileReader();
+
+        /** Transformando o Objeto this.formEl.elements em
+         * Array. O perador Spread poupa ter que indicar cada 
+         * um dos indices de um array.
+         */
+        let elements = [...this.formEl.elements].filter( item =>
+        {
+
+            if( item.name === 'photo' )
+            {
+
+                return item;
+
+            }//end if
+            
+        });//end filter
+
+        let file = elements[0].files[0];
+
+        fileReader.onload = () =>
+        {
+
+            callback(fileReader.result);
+
+        }//end onload
+
+        fileReader.readAsDataURL(file);
+
+    }//END getPhoto
+
+
+
     getValues()
     {
         let user = {};
 
-        /** Transformando o Objeto this.formEl. elements em
-         * array. O perador Spread poupa ter que indicar cada 
+        /** Transformando o Objeto this.formEl.elements em
+         * Array. O perador Spread poupa ter que indicar cada 
          * um dos indices de um array.
          */
         [...this.formEl.elements].forEach( function(field, index)
@@ -80,7 +125,7 @@ class UserController
         this.tableEl.innerHTML = `
         
             <tr>
-                <td><img src="dist/img/user1-128x128.jpg" alt="User Image" class="img-circle img-sm"></td>
+                <td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
                 <td>${dataUser.name}</td>
                 <td>${dataUser.email}</td>
                 <td>${dataUser.admin}</td>
