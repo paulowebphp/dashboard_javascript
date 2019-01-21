@@ -28,6 +28,8 @@ class UserController
 
             let values = this.getValues();
 
+            if( !values ) return false;
+
             this.getPhoto().then( ( content ) =>
             {
 
@@ -157,10 +159,7 @@ class UserController
     
         });//end forEach
 
-        if( !isValid )
-        {
-            return false;
-        }//end if
+        if( !isValid ) return false;
     
         return new User(
             user.name,
@@ -183,6 +182,8 @@ class UserController
     {
         let tr = document.createElement('tr');
 
+        tr.dataset.user = JSON.stringify(dataUser);
+
         tr.innerHTML = `
         
             <td><img src="${dataUser.photo}" alt="User Image" class="img-circle img-sm"></td>
@@ -199,8 +200,37 @@ class UserController
         
         this.tableEl.appendChild(tr);
 
+        this.updateCount();
+
     }//END addLine
 
+
+
+
+
+    updateCount()
+    {
+
+        let numberUsers = 0;
+        let numberAdmin = 0;
+
+        [...this.tableEl.children].forEach( tr =>
+            {
+
+                numberUsers++;
+
+                let user = JSON.parse(tr.dataset.user);
+
+                if( user._admin ) numberAdmin++;
+
+            });//end forEach
+
+            console.log(numberUsers, numberAdmin);
+            
+            document.querySelector("#number-users").innerHTML = numberUsers;
+            document.querySelector("#number-users-admin").innerHTML = numberAdmin;
+
+    }//END updateCount
 
 
 
